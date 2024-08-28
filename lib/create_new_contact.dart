@@ -48,6 +48,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 labelText: 'Input Name',
                 labelStyle: TextStyle(fontSize: 15),
               ),
+              keyboardType: TextInputType.name,
             ),
             const SizedBox(
               height: 20,
