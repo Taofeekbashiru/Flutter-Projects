@@ -1,3 +1,20 @@
+class User {
+  String fullname;
+  String phoneNumber;
+
+  User({
+    required this.fullname,
+    required this.phoneNumber,
+  });
+}
+
+List<User> contactList = List.generate(20, (index) {
+  return User(
+    fullname: usernames[index],
+    phoneNumber: '123-456-78${index % 10}', // Example phone number
+  );
+});
+
 List<String> usernames = [
   "John Smith",
   "Jane Doe",

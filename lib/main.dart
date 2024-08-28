@@ -1,6 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:contactlist/create_new_contact.dart';
 import 'package:contactlist/contact_detail_screen.dart';
-import 'package:contactlist/contact_names.dart';
+import 'package:contactlist/user.dart';
+
+// Assignment:
+/// - Build a 'CreateContactScreen' where you are to create a contact by providing the following details
+/// a. Name
+/// b. Phone Number
+/// - Use a TextField and a TextEditingController to handle the user input
+/// - Your UI should have a 'Create Contact' button which will be used to create a contact.
+/// - When you are done with that, When you click the 'Create Contact' Button. the button should create a new 'User' object (User class is in the User.dart file)
+/// with the input provided in the TextFields. and add that user object to the ContactList (Hint; contactList.add(UserObject))
 
 void main() {
   runApp(const MyApp());
@@ -13,9 +24,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
       darkTheme: ThemeData.dark(),
@@ -35,13 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
   //Create state here
   String name = "Contacts";
   int index = 0;
-  bool value = false;
-  List<User> contactList = List.generate(10, (index) {
-    return User(
-      fullname: usernames[index],
-      phoneNumber: '123-456-78${index % 10}', // Example phone number
-    );
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +54,16 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
           centerTitle: false,
           toolbarHeight: 70,
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AboutPage()));
+                },
+                child: const Text("About Me"))
+          ],
           title: ListTile(
             title: Text(
               name,
@@ -59,6 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           )),
       body: ListView.builder(
+          reverse: true,
           padding: const EdgeInsets.symmetric(horizontal: 8),
           itemCount: contactList.length,
           itemBuilder: (context, index) {
@@ -68,12 +84,28 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const ContactScreen()));
+        },
         label: Text(
           "Create Contact",
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
         backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+      ),
+    );
+  }
+}
+
+class AboutPage extends StatelessWidget {
+  const AboutPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("About Screen"),
       ),
     );
   }
@@ -102,11 +134,14 @@ class ContactTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context).push(
+          MaterialPageRoute(
             builder: (context) => ContactDetailScreen(
                 fullname: fullname,
                 phoneNumber: phoneNumber,
-                initials: getInitials())));
+                initials: getInitials()),
+          ),
+        );
       },
       child: Card(
         color: Theme.of(context).colorScheme.primaryContainer,
@@ -130,14 +165,4 @@ class ContactTile extends StatelessWidget {
       ),
     );
   }
-}
-
-class User {
-  String fullname;
-  String phoneNumber;
-
-  User({
-    required this.fullname,
-    required this.phoneNumber,
-  });
 }

@@ -46,7 +46,9 @@ class ContactDetailScreen extends StatelessWidget {
                 ),
                 const Spacer(),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
                   child: Container(
                     height: 50,
                     width: MediaQuery.of(context).size.width / 2,
