@@ -1,8 +1,10 @@
+import 'package:contactlist/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:contactlist/create_new_contact.dart';
 import 'package:contactlist/contact_detail_screen.dart';
 import 'package:contactlist/user.dart';
+import 'package:provider/provider.dart';
 
 // Assignment:
 /// - Build a 'CreateContactScreen' where you are to create a contact by providing the following details
@@ -23,15 +25,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (context) => UpdateProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+          useMaterial3: true,
+        ),
+        darkTheme: ThemeData.dark(),
+        home: const HomeScreen(),
       ),
-      darkTheme: ThemeData.dark(),
-      home: const HomeScreen(),
     );
   }
 }
@@ -49,7 +54,14 @@ class _HomeScreenState extends State<HomeScreen> {
   int index = 0;
 
   @override
+  void initState() {
+    super.initState();
+    Provider.of<UpdateProvider>(context, listen: false).updateContactList();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<UpdateProvider>(context);
     return Scaffold(
       appBar: AppBar(
           centerTitle: false,
@@ -70,23 +82,27 @@ class _HomeScreenState extends State<HomeScreen> {
               style: const TextStyle(fontSize: 30),
             ),
             subtitle: Text(
-              "total: ${contactList.length}",
+              "total: ${provider.contactList.length}",
             ),
           )),
       body: ListView.builder(
           reverse: true,
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          itemCount: contactList.length,
+          itemCount: provider.contactList.length,
           itemBuilder: (context, index) {
             return ContactTile(
-              fullname: contactList[index].fullname,
-              phoneNumber: contactList[index].phoneNumber,
+              fullname: provider.contactList[index].fullname,
+              phoneNumber: provider.contactList[index].phoneNumber,
             );
           }),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const ContactScreen()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ContactScreen(),
+            ),
+          );
         },
         label: Text(
           "Create Contact",
@@ -137,9 +153,10 @@ class ContactTile extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ContactDetailScreen(
-                fullname: fullname,
-                phoneNumber: phoneNumber,
-                initials: getInitials()),
+              fullname: fullname,
+              phoneNumber: phoneNumber,
+              initials: getInitials(),
+            ),
           ),
         );
       },

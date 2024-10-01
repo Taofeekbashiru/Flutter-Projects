@@ -1,5 +1,7 @@
+import 'package:contactlist/provider.dart';
 import 'package:contactlist/user.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ContactScreen extends StatefulWidget {
   const ContactScreen({super.key});
@@ -12,9 +14,17 @@ class _ContactScreenState extends State<ContactScreen> {
   final TextEditingController typeName = TextEditingController();
   final TextEditingController typePhoneNo = TextEditingController();
 
-  get fullname => null;
+  bool _obscureText = true;
 
-  get phoneNumber => null;
+  void toggleVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  get fullname => typeName.value.text;
+
+  get phoneNumber => typePhoneNo.value.text;
 
   void createContact() {
     final String name = typeName.text;
@@ -27,6 +37,8 @@ class _ContactScreenState extends State<ContactScreen> {
       // to clear the text field after creating newContact
       typeName.clear();
       typePhoneNo.clear();
+      Provider.of<UpdateProvider>(context, listen: false)
+          .joinNewcontact(newContact);
     }
   }
 
@@ -34,8 +46,14 @@ class _ContactScreenState extends State<ContactScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const ListTile(
-          title: Text("Create newcontact"),
+        centerTitle: true,
+        title: ListTile(
+          title: Text(
+            "Create newcontact",
+            style: TextStyle(
+                fontWeight: FontWeight.w100,
+                color: Theme.of(context).colorScheme.onPrimary),
+          ),
         ),
       ),
       body: Padding(
@@ -46,7 +64,9 @@ class _ContactScreenState extends State<ContactScreen> {
               controller: typeName,
               decoration: const InputDecoration(
                 labelText: 'Input Name',
-                labelStyle: TextStyle(fontSize: 15),
+                labelStyle: TextStyle(
+                  fontSize: 15,
+                ),
               ),
               keyboardType: TextInputType.name,
             ),
@@ -54,36 +74,36 @@ class _ContactScreenState extends State<ContactScreen> {
               height: 20,
             ),
             TextField(
+              obscureText: _obscureText,
               controller: typePhoneNo,
-              decoration:
-                  const InputDecoration(labelText: 'Input phone Number'),
+              decoration: InputDecoration(
+                  labelText: 'Input phone Number',
+                  labelStyle: const TextStyle(fontSize: 20),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureText ? Icons.visibility_off : Icons.visibility,
+                    ),
+                    onPressed: toggleVisibility,
+                  )),
               keyboardType: TextInputType.phone,
             ),
             const SizedBox(
               height: 20,
             ),
             ElevatedButton(
-                onPressed: createContact,
-                child: const Text(
-                  'Add new contact',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ))
+              onPressed: createContact,
+              child: const Text(
+                'Add new contact',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.normal,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            )
           ],
         ),
       ),
     );
   }
 }
-
-// class Contact {
-//   String fullname;
-//   String phoneNumber;
-
-//   Contact({required this.fullname, required this.phoneNumber});
-// }
-
-// List<Contact> newContact = [];

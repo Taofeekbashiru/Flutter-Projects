@@ -8,7 +8,7 @@ class User {
   });
 }
 
-List<User> contactList = List.generate(20, (index) {
+List<User> contactList = List.generate(30, (index) {
   return User(
     fullname: usernames[index],
     phoneNumber: '123-456-78${index % 10}', // Example phone number
