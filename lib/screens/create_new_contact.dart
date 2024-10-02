@@ -1,5 +1,4 @@
 import 'package:contactlist/provider.dart';
-import 'package:contactlist/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,37 +21,18 @@ class _ContactScreenState extends State<ContactScreen> {
     });
   }
 
-  get fullname => typeName.value.text;
-
-  get phoneNumber => typePhoneNo.value.text;
-
-  void createContact() {
-    final String name = typeName.text;
-    final String contactNo = typePhoneNo.text;
-
-    if (name.isNotEmpty && contactNo.isNotEmpty) {
-      final newContact = User(fullname: fullname, phoneNumber: phoneNumber);
-      contactList.add(newContact);
-
-      // to clear the text field after creating newContact
-      typeName.clear();
-      typePhoneNo.clear();
-      Provider.of<UpdateProvider>(context, listen: false)
-          .joinNewcontact(newContact);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: ListTile(
+        title: const ListTile(
           title: Text(
-            "Create newcontact",
+            "Create New Contact",
             style: TextStyle(
-                fontWeight: FontWeight.w100,
-                color: Theme.of(context).colorScheme.onPrimary),
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
@@ -90,8 +70,14 @@ class _ContactScreenState extends State<ContactScreen> {
             const SizedBox(
               height: 20,
             ),
+            // button
             ElevatedButton(
-              onPressed: createContact,
+              onPressed: () {
+                Provider.of<UpdateProvider>(context, listen: false)
+                    .createNewContact(
+                        fullName: typeName.text, phoneNumber: typePhoneNo.text);
+                Navigator.pop(context);
+              },
               child: const Text(
                 'Add new contact',
                 style: TextStyle(
