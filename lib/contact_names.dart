@@ -26,5 +26,7 @@ List<String> usernames = [
   "Sebastian Hill",
   "Ella Green",
   "Liam Adams",
-  "Grace Baker"
+  "Grace Baker",
+  "Isah Amad",
+  "Adeleke Rice"
 ];
