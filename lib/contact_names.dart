@@ -5,8 +5,6 @@ List<String> usernames = [
   "Emily Brown",
   "David Taylor",
   "Emma Anderson",
-  "Daniel Thomas",
-  "Sophia Jackson",
   "Matthew White",
   "Olivia Harris",
   "James Martin",
